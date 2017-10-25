@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "A NodeJS wrapper to the Stanford NER library",
   "engines": {
-    "node": "4.4.5"
+    "node": ">=4.4.5"
   },
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -16,7 +16,7 @@
   "license": "GNU General Public License, version 2",
   "dependencies": {
     "lodash": "^4.13.1",
-    "natural": "^0.4.0",
+    "natural": "0.5.4",
     "node-uuid": "^1.4.7"
   }
 }
