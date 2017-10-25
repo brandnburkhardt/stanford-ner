@@ -42,8 +42,6 @@ typings
 # ignore .js.map files
 *.js.map
 
-*.js
-
 npm-debug.log
 .DS_Store
 /*.env
