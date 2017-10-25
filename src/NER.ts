@@ -39,7 +39,7 @@ export class NER {
         //This script compiles to ./dist/src hence ../../stanford-ner-2015-12-09
         installPath: path.join(__dirname, "../../stanford-ner-2017-06-09"),
         jar: "stanford-ner.jar",
-        classifier: "english.all.3class.distsim.crf.ser.gz"
+        classifier: "english.muc.7class.distsim.crf.ser.gz"
     };
 
     /**
@@ -52,7 +52,7 @@ export class NER {
      */
     private checkPaths() {
         const classifierPath = path.normalize(path.join(this.options.installPath, "classifiers", this.options.classifier));
-        
+
         if(!fs.existsSync(classifierPath)) {
             throw new FileNotFoundError("Classifier could not be found at path:" + classifierPath);
         }
