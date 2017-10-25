@@ -37,7 +37,7 @@ export class NER {
      */
     private options: NEROptions = {
         //This script compiles to ./dist/src hence ../../stanford-ner-2015-12-09
-        installPath: path.join(__dirname, "../../stanford-ner-2015-12-09"),
+        installPath: path.join(__dirname, "../../stanford-ner-2017-06-09"),
         jar: "stanford-ner.jar",
         classifier: "english.all.3class.distsim.crf.ser.gz"
     };
@@ -73,7 +73,7 @@ export class NER {
             [
                 "-mx1500m",
                 "-cp",
-                path.normalize(path.join(this.options.installPath, this.options.jar)) + 
+                path.normalize(path.join(this.options.installPath, this.options.jar)) +
                     (isWin ? ";" : ":") + path.normalize(path.join(this.options.installPath, "/lib/*")),
                 "edu.stanford.nlp.ie.crf.CRFClassifier",
                 "-loadClassifier",
@@ -83,7 +83,7 @@ export class NER {
         );
 
         this.childProcess.stdout.setEncoding("utf8");
-    
+
         /**
          * Kill the child process on Control + C
          */
@@ -133,7 +133,7 @@ export class NER {
     private parse = function(parsed: string) {
         const tokenized = parsed.split(/\s/gmi);
         const splitRegex = new RegExp('(.+)/([A-Z]+)','g');
-        
+
         let tagged = _.map(tokenized, function(token) {
             const parts = new RegExp('(.+)/([A-Z]+)','g').exec(token);
             if (parts) {
@@ -144,9 +144,9 @@ export class NER {
             }
             return null;
         });
-        
+
         tagged = _.compact(tagged);
-        
+
         // Now we extract the neighbors into one entity
         const entities: Map<string, string[]> = new Map<string, string[]>();
         const l = tagged.length;
@@ -186,7 +186,7 @@ export class NER {
             // Save the current entity
             prevEntity = tagged[i].t;
         }
-        
+
         //If entity buffer is not empty, then add the last entries
         if(entityBuffer.length) {
             entities.set(prevEntity, entityBuffer);
@@ -202,7 +202,7 @@ export class NER {
     private getTokenCount(text: string, isTagged?:boolean) {
         const tokenizer = new natural.TreebankWordTokenizer();
         let textTokens: string[];
-        
+
         if(isTagged) {
             textTokens = text.split(" ");
             textTokens = textTokens.map((val: string) => {
@@ -237,7 +237,7 @@ export class NER {
         else {
             textTokens = tokenizer.tokenize(text);
         }
-         
+
         const filtered = textTokens.filter((value: string) => {
             if(isTagged) {
                 const parts = value.split("/");
@@ -248,7 +248,7 @@ export class NER {
             }
             return false;
         });
-        
+
         return filtered.length;
     }
 
@@ -263,7 +263,7 @@ export class NER {
 
     private extract(text: string, resolve: (value: Map<string, string[]>[]) => void) {
         let numTokens = this.getTokenCount(text);
-        
+
         const result: Map<string, string[]>[] = []
         this.childProcess.stdout.on("data", (data: string) => {
             data = data.trim();
@@ -272,7 +272,7 @@ export class NER {
                 numTokens -= this.getTokenCount(sentence, true);
                 const parsed = this.parse(sentence);
                 result.push(parsed);
-                
+
                 if(numTokens <= 0) {
                     this.childProcess.stdout.removeAllListeners();
                     this.isBusy = false;
@@ -286,7 +286,7 @@ export class NER {
         });
 
         //Remove any CR+LF from the text.
-        text = text.trim(); 
+        text = text.trim();
 
         //Then add one last one
         text += "\n"
