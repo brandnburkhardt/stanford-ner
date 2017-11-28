@@ -17,6 +17,11 @@ export interface NEROptions {
      * Default: english.all.3class.distsim.crf.ser.gz
      */
     classifier: string;
+    /**
+     * The amount of memory (in MB) to allocate to the Java process' heap.
+     * Default: 1500
+     */
+    javaHeapSize: number;
 }
 /**
  * Wraps the Stanford NER and provides interfaces for classifiecation
@@ -43,8 +48,9 @@ export declare class NER {
      * @param {string} installPath (Optional) Relative or absolute path to the Stanford NER directory. Default: ./stanford-ner-2015-12-09
      * @param {string} jar (Optional) The jar file for Stanford NER. Default: stanford-ner.jar
      * @param {string} classifier (Optional) The classifier to use. Default: english.all.3class.distsim.crf.ser.gz
+     * @param {number} javaHeapSize (Optional) The amount of memory (in MB) to allocate to the Java process' heap. Default: 1500
      */
-    constructor(installPath?: string, jar?: string, classifier?: string);
+    constructor(installPath?: string, jar?: string, classifier?: string, javaHeapSize?: number);
     /**
      * Parses the tagged output from the NER into a Javascript object.
      * Adapted from: https://github.com/26medias/node-ner/blob/master/node-ner.js

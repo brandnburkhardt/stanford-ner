@@ -26,6 +26,11 @@ export interface NEROptions {
      * Default: english.all.3class.distsim.crf.ser.gz
      */
     classifier: string;
+    /**
+     * The amount of memory (in MB) to allocate to the Java process' heap.
+     * Default: 1500
+     */
+    javaHeapSize: number;
 }
 
 /**
@@ -39,7 +44,8 @@ export class NER {
         //This script compiles to ./dist/src hence ../../stanford-ner-2015-12-09
         installPath: path.join(__dirname, "../../stanford-ner-2017-06-09"),
         jar: "stanford-ner.jar",
-        classifier: "english.muc.7class.distsim.crf.ser.gz"
+        classifier: "english.muc.7class.distsim.crf.ser.gz",
+        javaHeapSize: 1500
     };
 
     /**
@@ -71,7 +77,7 @@ export class NER {
         this.childProcess = childProcess.spawn(
             "java",
             [
-                "-mx1500m",
+                "-mx" + this.options.javaHeapSize + "m",
                 "-cp",
                 path.normalize(path.join(this.options.installPath, this.options.jar)) +
                     (isWin ? ";" : ":") + path.normalize(path.join(this.options.installPath, "/lib/*")),
@@ -104,8 +110,9 @@ export class NER {
      * @param {string} installPath (Optional) Relative or absolute path to the Stanford NER directory. Default: ./stanford-ner-2015-12-09
      * @param {string} jar (Optional) The jar file for Stanford NER. Default: stanford-ner.jar
      * @param {string} classifier (Optional) The classifier to use. Default: english.all.3class.distsim.crf.ser.gz
+     * @param {number} javaHeapSize (Optional) The amount of memory (in MB) to allocate to the Java process' heap. Default: 1500
      */
-    constructor(installPath?: string, jar?: string, classifier?: string) {
+    constructor(installPath?: string, jar?: string, classifier?: string, javaHeapSize?: number) {
         if(installPath) {
             installPath = installPath.trim();
             this.options.installPath = installPath;
@@ -119,6 +126,10 @@ export class NER {
         if(classifier) {
             classifier = classifier.trim();
             this.options.classifier = classifier;
+        }
+
+        if(Number.isFinite(javaHeapSize) && javaHeapSize >= 0) {
+            this.options.javaHeapSize = javaHeapSize;
         }
 
         this.checkPaths();
