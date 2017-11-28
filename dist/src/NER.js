@@ -270,7 +270,7 @@ class NER {
                 this.isBusy = true;
                 return new Promise((resolve, reject) => {
                     this.extract(text, resolve);
-                })
+                });
             }
         });
     }
