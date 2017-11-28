@@ -74,7 +74,6 @@ export class NER {
      */
     private spawnProcess() {
         const isWin = /^win/.test(process.platform);
-        console.log("##########################JAVA HEAP: " + this.options.javaHeapSize);
         this.childProcess = childProcess.spawn(
             "java",
             [
